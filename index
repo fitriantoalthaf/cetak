@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Sabinta Booklet Generator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+ --bg:#f8fafc;
+ --card:#ffffff;
+ --primary:#6366f1;
+ --text:#0f172a;
+ --muted:#64748b;
+ --border:#e2e8f0;
+}
+
+*{
+ margin:0;
+ padding:0;
+ box-sizing:border-box;
+}
+
+body{
+ background:var(--bg);
+ font-family:'Inter',sans-serif;
+ padding:40px 20px;
+ color:var(--text);
+}
+
+.container{
+ max-width:1100px;
+ margin:auto;
+}
+
+.header{
+ text-align:center;
+ margin-bottom:30px;
+}
+
+.header h1{
+ font-size:32px;
+ font-weight:700;
+}
+
+.header p{
+ color:var(--muted);
+ margin-top:8px;
+}
+
+.card{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:20px;
+ padding:24px;
+ margin-bottom:20px;
+ box-shadow:
+ 0 1px 3px rgba(0,0,0,.03),
+ 0 8px 24px rgba(0,0,0,.04);
+}
+
+.control{
+ display:flex;
+ gap:12px;
+ flex-wrap:wrap;
+ align-items:center;
+}
+
+input{
+ padding:14px 16px;
+ border:1px solid var(--border);
+ border-radius:12px;
+ font-size:16px;
+ width:180px;
+}
+
+button{
+ border:none;
+ background:var(--primary);
+ color:white;
+ padding:14px 24px;
+ border-radius:12px;
+ cursor:pointer;
+ font-weight:600;
+ transition:.2s;
+}
+
+button:hover{
+ transform:translateY(-1px);
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:1fr;
+ gap:20px;
+}
+
+@media(min-width:900px){
+ .grid{
+  grid-template-columns:1fr 1fr;
+ }
+}
+
+.box-title{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:10px;
+}
+
+.box-title h3{
+ font-size:18px;
+}
+
+.copy{
+ background:#eef2ff;
+ color:#4f46e5;
+ padding:8px 14px;
+ border-radius:10px;
+ font-size:14px;
+}
+
+textarea{
+ width:100%;
+ height:220px;
+ resize:none;
+ border:1px solid var(--border);
+ border-radius:12px;
+ padding:14px;
+ font-size:14px;
+ line-height:1.6;
+}
+
+.full{
+ grid-column:1/-1;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+<h1>📚 Sabinta Booklet Generator</h1>
+<p>Generator Imposisi A5 ke A4 untuk Foxit & PDF Element</p>
+</div>
+
+<div class="card">
+
+<div class="control">
+
+<input type="number"
+id="total"
+value="116"
+placeholder="Jumlah Halaman">
+
+<button onclick="generate()">
+Generate
+</button>
+
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<div class="box-title">
+<h3>Buku A</h3>
+<button class="copy" onclick="copyText('bookA')">
+Copy
+</button>
+</div>
+
+<textarea id="bookA"></textarea>
+
+</div>
+
+<div class="card">
+
+<div class="box-title">
+<h3>Buku B</h3>
+<button class="copy" onclick="copyText('bookB')">
+Copy
+</button>
+</div>
+
+<textarea id="bookB"></textarea>
+
+</div>
+
+<div class="card full">
+
+<div class="box-title">
+<h3>Gabungan</h3>
+<button class="copy" onclick="copyText('final')">
+Copy Semua
+</button>
+</div>
+
+<textarea id="final"></textarea>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function generate(){
+
+let total=parseInt(
+document.getElementById("total").value
+);
+
+if(total%4!==0){
+ total += (4-total%4);
+}
+
+let A=[];
+
+let l=1;
+let r=total;
+
+while(l<r){
+
+ A.push(l);
+ A.push(r);
+
+ A.push(r-1);
+ A.push(l+1);
+
+ l+=2;
+ r-=2;
+}
+
+let B=[];
+
+for(let i=A.length-1;i>=0;i-=4){
+
+ B.push(A[i-1]);
+ B.push(A[i]);
+
+ B.push(A[i-3]);
+ B.push(A[i-2]);
+
+}
+
+document.getElementById("bookA").value=A.join(",");
+document.getElementById("bookB").value=B.join(",");
+document.getElementById("final").value=A.join(",")+","+B.join(",");
+
+}
+
+function copyText(id){
+
+let el=document.getElementById(id);
+
+navigator.clipboard.writeText(el.value);
+
+}
+
+generate();
+
+</script>
+
+</body>
+</html>
